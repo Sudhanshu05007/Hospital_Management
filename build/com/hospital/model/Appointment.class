@@ -1,0 +1,147 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
+package com.hospital.model;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+public class Appointment {
+    private int appointmentId;
+    private int patientId;
+    private int doctorId;
+    private LocalDate appointmentDate;
+    private LocalTime appointmentTime;
+    private String status;
+    private String notes;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private String patientName;
+    private String doctorName;
+    private String doctorSpecialization;
+
+    public Appointment() {
+    }
+
+    public Appointment(int var1, int var2, LocalDate var3, LocalTime var4) {
+        this.patientId = var1;
+        this.doctorId = var2;
+        this.appointmentDate = var3;
+        this.appointmentTime = var4;
+        this.status = "Scheduled";
+    }
+
+    public Appointment(int var1, int var2, int var3, LocalDate var4, LocalTime var5, String var6, String var7) {
+        this.appointmentId = var1;
+        this.patientId = var2;
+        this.doctorId = var3;
+        this.appointmentDate = var4;
+        this.appointmentTime = var5;
+        this.status = var6;
+        this.notes = var7;
+    }
+
+    public int getAppointmentId() {
+        return this.appointmentId;
+    }
+
+    public void setAppointmentId(int var1) {
+        this.appointmentId = var1;
+    }
+
+    public int getPatientId() {
+        return this.patientId;
+    }
+
+    public void setPatientId(int var1) {
+        this.patientId = var1;
+    }
+
+    public int getDoctorId() {
+        return this.doctorId;
+    }
+
+    public void setDoctorId(int var1) {
+        this.doctorId = var1;
+    }
+
+    public LocalDate getAppointmentDate() {
+        return this.appointmentDate;
+    }
+
+    public void setAppointmentDate(LocalDate var1) {
+        this.appointmentDate = var1;
+    }
+
+    public LocalTime getAppointmentTime() {
+        return this.appointmentTime;
+    }
+
+    public void setAppointmentTime(LocalTime var1) {
+        this.appointmentTime = var1;
+    }
+
+    public String getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(String var1) {
+        this.status = var1;
+    }
+
+    public String getNotes() {
+        return this.notes;
+    }
+
+    public void setNotes(String var1) {
+        this.notes = var1;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return this.createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime var1) {
+        this.createdAt = var1;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return this.updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime var1) {
+        this.updatedAt = var1;
+    }
+
+    public String getPatientName() {
+        return this.patientName;
+    }
+
+    public void setPatientName(String var1) {
+        this.patientName = var1;
+    }
+
+    public String getDoctorName() {
+        return this.doctorName;
+    }
+
+    public void setDoctorName(String var1) {
+        this.doctorName = var1;
+    }
+
+    public String getDoctorSpecialization() {
+        return this.doctorSpecialization;
+    }
+
+    public void setDoctorSpecialization(String var1) {
+        this.doctorSpecialization = var1;
+    }
+
+    public String toString() {
+        int var10000 = this.appointmentId;
+        return "Appointment{appointmentId=" + var10000 + ", patientName='" + this.patientName + "', doctorName='" + this.doctorName + "', appointmentDate=" + String.valueOf(this.appointmentDate) + ", appointmentTime=" + String.valueOf(this.appointmentTime) + ", status='" + this.status + "'}";
+    }
+}
