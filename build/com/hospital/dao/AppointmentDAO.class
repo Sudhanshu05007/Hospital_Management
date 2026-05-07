@@ -1,0 +1,304 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
+package com.hospital.dao;
+
+import com.hospital.model.Appointment;
+import com.hospital.util.DatabaseConnection;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+
+public class AppointmentDAO {
+    public boolean bookAppointment(Appointment var1) {
+        String var2 = "INSERT INTO appointments (patient_id, doctor_id, appointment_date, appointment_time, status, notes) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try {
+            boolean var6;
+            try (
+                Connection var3 = DatabaseConnection.getConnection();
+                PreparedStatement var4 = var3.prepareStatement(var2);
+            ) {
+                var4.setInt(1, var1.getPatientId());
+                var4.setInt(2, var1.getDoctorId());
+                var4.setDate(3, Date.valueOf(var1.getAppointmentDate()));
+                var4.setTime(4, Time.valueOf(var1.getAppointmentTime()));
+                var4.setString(5, var1.getStatus() != null ? var1.getStatus() : "Scheduled");
+                var4.setString(6, var1.getNotes());
+                int var5 = var4.executeUpdate();
+                var6 = var5 > 0;
+            }
+
+            return var6;
+        } catch (SQLException var11) {
+            var11.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Appointment> getAllAppointments() {
+        ArrayList var1 = new ArrayList();
+        String var2 = "SELECT a.*, p.name as patient_name, d.name as doctor_name, d.specialization FROM appointments a JOIN patients p ON a.patient_id = p.patient_id JOIN doctors d ON a.doctor_id = d.doctor_id ORDER BY a.appointment_date DESC, a.appointment_time DESC";
+
+        try (
+            Connection var3 = DatabaseConnection.getConnection();
+            Statement var4 = var3.createStatement();
+            ResultSet var5 = var4.executeQuery(var2);
+        ) {
+            while(var5.next()) {
+                Appointment var6 = new Appointment();
+                var6.setAppointmentId(var5.getInt("appointment_id"));
+                var6.setPatientId(var5.getInt("patient_id"));
+                var6.setDoctorId(var5.getInt("doctor_id"));
+                var6.setAppointmentDate(var5.getDate("appointment_date").toLocalDate());
+                var6.setAppointmentTime(var5.getTime("appointment_time").toLocalTime());
+                var6.setStatus(var5.getString("status"));
+                var6.setNotes(var5.getString("notes"));
+                var6.setPatientName(var5.getString("patient_name"));
+                var6.setDoctorName(var5.getString("doctor_name"));
+                var6.setDoctorSpecialization(var5.getString("specialization"));
+                var1.add(var6);
+            }
+        } catch (SQLException var14) {
+            var14.printStackTrace();
+        }
+
+        return var1;
+    }
+
+    public Appointment getAppointmentById(int var1) {
+        String var2 = "SELECT a.*, p.name as patient_name, d.name as doctor_name, d.specialization FROM appointments a JOIN patients p ON a.patient_id = p.patient_id JOIN doctors d ON a.doctor_id = d.doctor_id WHERE a.appointment_id = ?";
+
+        try {
+            Appointment var7;
+            try (Connection var3 = DatabaseConnection.getConnection()) {
+                try (PreparedStatement var4 = var3.prepareStatement(var2)) {
+                    var4.setInt(1, var1);
+                    ResultSet var5 = var4.executeQuery();
+                    if (!var5.next()) {
+                        return null;
+                    }
+
+                    Appointment var6 = new Appointment();
+                    var6.setAppointmentId(var5.getInt("appointment_id"));
+                    var6.setPatientId(var5.getInt("patient_id"));
+                    var6.setDoctorId(var5.getInt("doctor_id"));
+                    var6.setAppointmentDate(var5.getDate("appointment_date").toLocalDate());
+                    var6.setAppointmentTime(var5.getTime("appointment_time").toLocalTime());
+                    var6.setStatus(var5.getString("status"));
+                    var6.setNotes(var5.getString("notes"));
+                    var6.setPatientName(var5.getString("patient_name"));
+                    var6.setDoctorName(var5.getString("doctor_name"));
+                    var6.setDoctorSpecialization(var5.getString("specialization"));
+                    var7 = var6;
+                }
+            }
+
+            return var7;
+        } catch (SQLException var12) {
+            var12.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean updateAppointment(Appointment var1) {
+        String var2 = "UPDATE appointments SET patient_id = ?, doctor_id = ?, appointment_date = ?, appointment_time = ?, status = ?, notes = ? WHERE appointment_id = ?";
+
+        try {
+            boolean var6;
+            try (
+                Connection var3 = DatabaseConnection.getConnection();
+                PreparedStatement var4 = var3.prepareStatement(var2);
+            ) {
+                var4.setInt(1, var1.getPatientId());
+                var4.setInt(2, var1.getDoctorId());
+                var4.setDate(3, Date.valueOf(var1.getAppointmentDate()));
+                var4.setTime(4, Time.valueOf(var1.getAppointmentTime()));
+                var4.setString(5, var1.getStatus());
+                var4.setString(6, var1.getNotes());
+                var4.setInt(7, var1.getAppointmentId());
+                int var5 = var4.executeUpdate();
+                var6 = var5 > 0;
+            }
+
+            return var6;
+        } catch (SQLException var11) {
+            var11.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean cancelAppointment(int var1) {
+        String var2 = "UPDATE appointments SET status = 'Cancelled' WHERE appointment_id = ?";
+
+        try {
+            boolean var6;
+            try (
+                Connection var3 = DatabaseConnection.getConnection();
+                PreparedStatement var4 = var3.prepareStatement(var2);
+            ) {
+                var4.setInt(1, var1);
+                int var5 = var4.executeUpdate();
+                var6 = var5 > 0;
+            }
+
+            return var6;
+        } catch (SQLException var11) {
+            var11.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteAppointment(int var1) {
+        String var2 = "DELETE FROM appointments WHERE appointment_id = ?";
+
+        try {
+            boolean var6;
+            try (
+                Connection var3 = DatabaseConnection.getConnection();
+                PreparedStatement var4 = var3.prepareStatement(var2);
+            ) {
+                var4.setInt(1, var1);
+                int var5 = var4.executeUpdate();
+                var6 = var5 > 0;
+            }
+
+            return var6;
+        } catch (SQLException var11) {
+            var11.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Appointment> getAppointmentsByPatient(int var1) {
+        ArrayList var2 = new ArrayList();
+        String var3 = "SELECT a.*, p.name as patient_name, d.name as doctor_name, d.specialization FROM appointments a JOIN patients p ON a.patient_id = p.patient_id JOIN doctors d ON a.doctor_id = d.doctor_id WHERE a.patient_id = ? ORDER BY a.appointment_date DESC";
+
+        try (
+            Connection var4 = DatabaseConnection.getConnection();
+            PreparedStatement var5 = var4.prepareStatement(var3);
+        ) {
+            var5.setInt(1, var1);
+            ResultSet var6 = var5.executeQuery();
+
+            while(var6.next()) {
+                Appointment var7 = new Appointment();
+                var7.setAppointmentId(var6.getInt("appointment_id"));
+                var7.setPatientId(var6.getInt("patient_id"));
+                var7.setDoctorId(var6.getInt("doctor_id"));
+                var7.setAppointmentDate(var6.getDate("appointment_date").toLocalDate());
+                var7.setAppointmentTime(var6.getTime("appointment_time").toLocalTime());
+                var7.setStatus(var6.getString("status"));
+                var7.setNotes(var6.getString("notes"));
+                var7.setPatientName(var6.getString("patient_name"));
+                var7.setDoctorName(var6.getString("doctor_name"));
+                var7.setDoctorSpecialization(var6.getString("specialization"));
+                var2.add(var7);
+            }
+        } catch (SQLException var12) {
+            var12.printStackTrace();
+        }
+
+        return var2;
+    }
+
+    public List<Appointment> getAppointmentsByDoctor(int var1) {
+        ArrayList var2 = new ArrayList();
+        String var3 = "SELECT a.*, p.name as patient_name, d.name as doctor_name, d.specialization FROM appointments a JOIN patients p ON a.patient_id = p.patient_id JOIN doctors d ON a.doctor_id = d.doctor_id WHERE a.doctor_id = ? ORDER BY a.appointment_date DESC";
+
+        try (
+            Connection var4 = DatabaseConnection.getConnection();
+            PreparedStatement var5 = var4.prepareStatement(var3);
+        ) {
+            var5.setInt(1, var1);
+            ResultSet var6 = var5.executeQuery();
+
+            while(var6.next()) {
+                Appointment var7 = new Appointment();
+                var7.setAppointmentId(var6.getInt("appointment_id"));
+                var7.setPatientId(var6.getInt("patient_id"));
+                var7.setDoctorId(var6.getInt("doctor_id"));
+                var7.setAppointmentDate(var6.getDate("appointment_date").toLocalDate());
+                var7.setAppointmentTime(var6.getTime("appointment_time").toLocalTime());
+                var7.setStatus(var6.getString("status"));
+                var7.setNotes(var6.getString("notes"));
+                var7.setPatientName(var6.getString("patient_name"));
+                var7.setDoctorName(var6.getString("doctor_name"));
+                var7.setDoctorSpecialization(var6.getString("specialization"));
+                var2.add(var7);
+            }
+        } catch (SQLException var12) {
+            var12.printStackTrace();
+        }
+
+        return var2;
+    }
+
+    public List<Appointment> getAppointmentsByDate(LocalDate var1) {
+        ArrayList var2 = new ArrayList();
+        String var3 = "SELECT a.*, p.name as patient_name, d.name as doctor_name, d.specialization FROM appointments a JOIN patients p ON a.patient_id = p.patient_id JOIN doctors d ON a.doctor_id = d.doctor_id WHERE a.appointment_date = ? ORDER BY a.appointment_time";
+
+        try (
+            Connection var4 = DatabaseConnection.getConnection();
+            PreparedStatement var5 = var4.prepareStatement(var3);
+        ) {
+            var5.setDate(1, Date.valueOf(var1));
+            ResultSet var6 = var5.executeQuery();
+
+            while(var6.next()) {
+                Appointment var7 = new Appointment();
+                var7.setAppointmentId(var6.getInt("appointment_id"));
+                var7.setPatientId(var6.getInt("patient_id"));
+                var7.setDoctorId(var6.getInt("doctor_id"));
+                var7.setAppointmentDate(var6.getDate("appointment_date").toLocalDate());
+                var7.setAppointmentTime(var6.getTime("appointment_time").toLocalTime());
+                var7.setStatus(var6.getString("status"));
+                var7.setNotes(var6.getString("notes"));
+                var7.setPatientName(var6.getString("patient_name"));
+                var7.setDoctorName(var6.getString("doctor_name"));
+                var7.setDoctorSpecialization(var6.getString("specialization"));
+                var2.add(var7);
+            }
+        } catch (SQLException var12) {
+            var12.printStackTrace();
+        }
+
+        return var2;
+    }
+
+    public boolean isDoctorAvailable(int var1, LocalDate var2, LocalTime var3) {
+        String var4 = "SELECT COUNT(*) FROM appointments WHERE doctor_id = ? AND appointment_date = ? AND appointment_time = ? AND status != 'Cancelled'";
+
+        try {
+            boolean var8;
+            try (Connection var5 = DatabaseConnection.getConnection()) {
+                try (PreparedStatement var6 = var5.prepareStatement(var4)) {
+                    var6.setInt(1, var1);
+                    var6.setDate(2, Date.valueOf(var2));
+                    var6.setTime(3, Time.valueOf(var3));
+                    ResultSet var7 = var6.executeQuery();
+                    if (!var7.next()) {
+                        return false;
+                    }
+
+                    var8 = var7.getInt(1) == 0;
+                }
+            }
+
+            return var8;
+        } catch (SQLException var13) {
+            var13.printStackTrace();
+            return false;
+        }
+    }
+}
