@@ -1,0 +1,64 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
+package com.hospital.util;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DatabaseConnection {
+    private static final String URL = "jdbc:mysql://localhost:3306/hospital_management";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "";
+    private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
+    private static Connection connection = null;
+
+    public static Connection getConnection() {
+        try {
+            if (connection == null || connection.isClosed()) {
+                connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hospital_management", "root", "");
+                System.out.println("Database connected successfully!");
+            }
+        } catch (SQLException var1) {
+            System.err.println("Failed to connect to database!");
+            var1.printStackTrace();
+        }
+
+        return connection;
+    }
+
+    public static void closeConnection() {
+        try {
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+                System.out.println("Database connection closed.");
+            }
+        } catch (SQLException var1) {
+            System.err.println("Error closing database connection!");
+            var1.printStackTrace();
+        }
+
+    }
+
+    public static boolean testConnection() {
+        try {
+            Connection var0 = getConnection();
+            return var0 != null && !var0.isClosed();
+        } catch (SQLException var1) {
+            return false;
+        }
+    }
+
+    static {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException var1) {
+            System.err.println("MySQL JDBC Driver not found!");
+            var1.printStackTrace();
+        }
+
+    }
+}
