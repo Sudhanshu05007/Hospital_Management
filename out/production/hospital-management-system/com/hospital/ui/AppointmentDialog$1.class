@@ -1,0 +1,27 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
+package com.hospital.ui;
+
+import com.hospital.model.Patient;
+import java.awt.Component;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JList;
+
+class AppointmentDialog$1 extends DefaultListCellRenderer {
+    AppointmentDialog$1(final AppointmentDialog this$0) {
+        this.this$0 = this$0;
+    }
+
+    public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        if (value instanceof Patient patient) {
+            String var10001 = patient.getName();
+            this.setText(var10001 + " (ID: " + patient.getPatientId() + ")");
+        }
+
+        return this;
+    }
+}
